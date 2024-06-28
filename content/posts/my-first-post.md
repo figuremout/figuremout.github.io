@@ -11,6 +11,7 @@ Hello, Hugo
 ## T2
 ```py
 print("hello")
+print("world")
 ```
 
 $\frac{1}{2} = 0.5$

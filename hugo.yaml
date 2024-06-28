@@ -38,6 +38,8 @@ params:
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
   math: true
+  assets:
+    disableHLJS: true
 
   homeInfoParams:
     Title: "👋 Welcome to Z'Blog"
@@ -72,3 +74,12 @@ outputs:
     - HTML
     - RSS
     - JSON # necessary for search
+
+markup:
+  highlight:
+    # anchorLineNos: true
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    # noClasses: false
+    style: gruvbox
