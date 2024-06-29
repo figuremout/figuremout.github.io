@@ -39,7 +39,7 @@ params:
     appendFilePath: true # to append file path to Edit link
   math: true
   assets:
-    disableHLJS: true
+    favicon: "/favicon.ico"
 
   homeInfoParams:
     Title: "👋 Welcome to Z'Blog"
