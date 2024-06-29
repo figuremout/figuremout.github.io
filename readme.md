@@ -1,5 +1,9 @@
 # Blog based on hugo-paperMod
-- Install/update paperMod theme: Check [here](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation#installingupdating-papermod)
+## Development
+1. Install hugo
+2. Git clone this repo
+3. Install/update paperMod theme: Check [here](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation#installingupdating-papermod)
+4. Run `hugo server -D` to serve the site locally
 
-- Serve the site (`hugo server`) or host on github pages (Github will [Deploy Hugo site to Pages](https://gohugo.io/hosting-and-deployment/hosting-on-github/) whenever you push a change.)
-
+## Deploy
+Github will [Deploy Hugo site to Pages](https://gohugo.io/hosting-and-deployment/hosting-on-github/) whenever you push a change.

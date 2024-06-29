@@ -31,8 +31,6 @@ params:
   ShowBreadCrumbs: true # Show BreadCrumb Navigation above single post/page title
   ShowCodeCopyButtons: true
   ShowToc: true
-  cover:
-    linkFullImages: true
   editPost:
     URL: "https://github.com/figuremout/figuremout.github.io/tree/main/content"
     Text: "Suggest Changes" # edit text
