@@ -10,7 +10,7 @@ cover:
 # Installation
 Follow [Installation doc](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation) to install Hugo and PaperMod.
 
-**Git Submodule Method is recommended**, which keeps your repo independent and tidy by seperating your configs and posts from the theme's source code.
+**Git Submodule Method is recommended**, which keeps your repo *independent and tidy* by seperating your configs and posts from the theme's source code.
 
 **Notice:** Don't forget to add a `.gitignore` file in your repo, like this:
 ```
@@ -24,7 +24,7 @@ Following are the tutorials of configuring PaperMod.
 
 You can reproduce the features by **simply copy the corresponding code snippets**.
 
-Check [PaperMod doc](https://adityatelange.github.io/hugo-PaperMod/archives/) and [Hugo doc](https://gohugo.io/getting-started/quick-start/) for more configuration. [PaperMod exampleSite source](https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite) is also a good start.
+Check [PaperMod doc](https://adityatelange.github.io/hugo-PaperMod/archives/) and [Hugo doc](https://gohugo.io/getting-started/quick-start/) for more details. [PaperMod exampleSite source](https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite) is also a good start.
 
 # Configuration
 ## Home Info
@@ -91,7 +91,7 @@ Luckily, we can configure it to show file’s last modification timestamp as dat
 
 
 ## Edit Link
-Add a button (like the "Suggest Changes" button on this page) to link the post to a edit destination (a github repo typically). See [doc](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#edit-link-for-posts).
+Add a button (like the *"Suggest Changes"* button on this page) to link the post to a edit destination (a github repo typically). See [doc](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#edit-link-for-posts).
 
 **Code Snippets**:
 - [hugo.yaml](https://github.com/figuremout/figuremout.github.io/blob/604ce26d8fb019780aaa8682a024a6cef3467ee2/hugo.yaml#L34-L37)
@@ -115,8 +115,26 @@ Host your site on Github Pages and setup **Github Actions**, so that Github will
 **Code Snippets**:
 - [.github/workflows/hugo.yaml](https://github.com/figuremout/figuremout.github.io/blob/e9c1f32d82b34dc7efa90afe47214911da13afb7/.github/workflows/hugo.yaml#L1-L89)
 
+## Render Raw HTML in Markdown
+[Hugo does not render raw HTML by default](https://discourse.gohugo.io/t/do-you-set-unsafe-true-in-markup-goldmark-renderer/37555).
+
+As a result, you cannot embed vedios using `<iframe>`, superscript using `<sup>` or insert collapsible sections using `<details>`, etc.
+
+Though you can achive the same by [*Hugo Shortcodes*](https://gohugo.io/content-management/shortcodes/), you may prefer the **more direct way: Insert pure HTML in Markdown**.
+
+Just enable the `unsafe` option of Goldmark Markdown renderer to make it work.
+
+**Code Snippets**:
+- [hugo.yaml](https://github.com/figuremout/figuremout.github.io/blob/6e1f81d2542c39e54cf36c0771532283c8030835/hugo.yaml#L85-L87)
+
+<details open>
+<summary><b>Demostration</b>:</summary>
+
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=841786906&bvid=BV1x54y1e7zf&cid=226204073&p=1&autoplay=0&danmaku=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="560" height="315" style="border:none;overflow:hidden;display:block;margin:0 auto;"></iframe>
+</details>
+
 # QA
-## How to specify the image path?
+## How to specify image path?
 Check [this](https://stackoverflow.com/questions/71501256/how-to-insert-an-image-in-my-post-on-hugo), there are two ways to reference a image in markdown.
 
 My preferred way is:
