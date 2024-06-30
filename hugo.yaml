@@ -45,7 +45,7 @@ params:
     Content: >
       - Hi, A **Software Engineer** here! 🤗
 
-      - Passionate about exploring Linux 🐧, AI 🤖 and software development 💻.
+      - Passionate about exploring Linux 🐧, AI 🤖 and Software Development 💻.
 
   socialIcons:
     - name: github
@@ -82,3 +82,6 @@ markup:
     lineNos: true
     # noClasses: false
     style: gruvbox
+  goldmark:
+    renderer:
+      unsafe: true
