@@ -38,6 +38,7 @@ params:
   math: true
   assets:
     favicon: "/favicon.ico"
+    disableHLJS: true
 
   homeInfoParams:
     Title: "👋 Welcome to Z'Blog"
