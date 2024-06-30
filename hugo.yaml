@@ -18,7 +18,7 @@ menu:
       url: tags/
       weight: 30
     - name: Github
-      url: https://github.com/figuremout
+      url: https://github.com/figuremout/figuremout.github.io
       weight: 40
 
 params:
