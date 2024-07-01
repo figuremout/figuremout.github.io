@@ -133,6 +133,48 @@ Just enable the `unsafe` option of Goldmark Markdown renderer to make it work.
 <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=841786906&bvid=BV1x54y1e7zf&cid=226204073&p=1&autoplay=0&danmaku=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="560" height="315" style="border:none;overflow:hidden;display:block;margin:0 auto;"></iframe>
 </details>
 
+## Change Content Width
+Check the issue [here](https://github.com/adityatelange/hugo-PaperMod/discussions/442#discussioncomment-5662173).
+
+**Code Snippets**:
+- [assets/css/extended/theme-vars.css](https://github.com/figuremout/figuremout.github.io/blob/c0eb8b8157a19994ae231c96b8886374610c96a2/assets/css/extended/theme-vars.css#L1-L3)
+
+## Change Fonts
+You can use **fonts from [Google Fonts](https://fonts.google.com)**.
+1. Find a font on Google Fonts.
+2. Get embed code for Web (several lines of html and css).
+3. Copy the html parts to `layouts/partials/extend_head.html`.
+4. Copy the css parts to `assets/css/extended/blank.css` (change css selector to `body`, `code` or `.post-content`).
+
+**Code Snippets**:
+- [layouts/partials/extend_head.html](https://github.com/figuremout/figuremout.github.io/blob/c0eb8b8157a19994ae231c96b8886374610c96a2/layouts/partials/extend_head.html#L5-L7)
+- [assets/css/extended/blank.css](https://github.com/figuremout/figuremout.github.io/blob/c0eb8b8157a19994ae231c96b8886374610c96a2/assets/css/extended/blank.css#L1-L9)
+
+**Or download fonts** like *[DroidSansM Nerd Font](https://www.nerdfonts.com/font-downloads)* into `static/fonts/`, then create `assets/css/extended/fonts.css` with the following code:
+```css
+@font-face {
+    font-family: "DroidSansMNerdFontMono-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFontMono-Regular.otf");
+}
+
+@font-face {
+    font-family: "DroidSansMNerdFontPropo-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFontPropo-Regular.otf");
+}
+
+@font-face {
+    font-family: "DroidSansMNerdFont-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf");
+}
+```
+
+And specify `font-family` in `assets/css/extended/blank.css` with the following code:
+```css
+.post-content {
+    font-family: "DroidSansMNerdFontPropo-Regular";
+}
+```
+
 # QA
 ## How to specify image path?
 Check [this](https://stackoverflow.com/questions/71501256/how-to-insert-an-image-in-my-post-on-hugo), there are two ways to reference a image in markdown.
