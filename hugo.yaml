@@ -45,24 +45,32 @@ params:
     Content: >
       - Hi, A **Software Engineer** here! 🤗
 
-      - Passionate about exploring Linux 🐧, AI 🤖 and Software Development 💻.
+      - Passionate about exploring ***Linux 🐧, AI 🤖 and Software Development 💻***.
 
   socialIcons:
+    - name: cv
+      title: "Check my resume"
+      url: "#"
     - name: github
       title: Visit me on GitHub
       url: "https://github.com/figuremout"
-    - name: email
-      title: Email me
-      url: "mailto:googlz555555@gmail.com"
     - name: googlescholar
       title: Visit me on Google Scholar
       url: "#"
+    - name: email
+      title: Email me
+      url: "mailto:googlz555555@gmail.com"
     - name: linkedin
       title: Visit me on LinkedIn
       url: "#"
     - name: bilibili
       title: Visit me on bilibili
       url: "#"
+    - name: rss
+      url: "#"
+
+  busuanzi:
+    enable: true
 
 frontmatter:
   date:
