@@ -1,4 +1,4 @@
-body, code {
+body {
   font-family: "Noto Sans SC", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -6,6 +6,11 @@ body, code {
   font-variation-settings:
     "wdth" 100;
   font-size: 16px;
+}
+
+code {
+  font-family: "DroidSansMNerdFontMono-Regular";
+  font-size: 13.5px !important;
 }
 
 .post-title {

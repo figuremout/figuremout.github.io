@@ -1,0 +1,16 @@
+@font-face {
+    font-family: "DroidSansMNerdFontMono-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFontMono-Regular.otf");
+}
+
+
+@font-face {
+    font-family: "DroidSansMNerdFontPropo-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFontPropo-Regular.otf");
+}
+
+@font-face {
+
+    font-family: "DroidSansMNerdFont-Regular";
+    src: url("/fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf");
+}
