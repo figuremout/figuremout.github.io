@@ -1,11 +1,11 @@
 ---
-title: 给 Linux 内核添加自定义系统调用
+title: Linux 内核添加自定义系统调用
 tags:
 - linux
 - kernel
 ---
 
-网上的教程[[1](#ref:1)]大多使用的老版本内核，许多内容已经不再适用了。本文是依托于我的项目 [mycall](https://github.com/figuremout/mycall) 的讲解，旨在把自己踩过的坑全部记录下来，**具体实现请参考源码**。实验在 ubuntu 20.04 amd64 虚拟机（内核版本为 5.15.0-105-generic）中进行，如有错误或建议（如不适用于 6.x 内核），欢迎在我的 [Github Page repo](https://github.com/figuremout/figuremout.github.io) 提 issue。
+网上的教程[[1](#ref:1)]大多使用老版本内核，许多内容已经不再适用了。本文依托于我的项目 [mycall](https://github.com/figuremout/mycall) 进行讲解，旨在把自己踩过的坑全部记录下来，**具体实现请参考源码**。实验在 ubuntu 20.04 amd64 虚拟机（内核版本 5.15.0-105-generic）中进行，如有错误或建议（如不适用于 6.x 内核），欢迎在我的 [Github Page repo](https://github.com/figuremout/figuremout.github.io) 提 issue。
 
 本文将先后介绍给内核添加自定义系统调用的两种方式：
 - 通过内核模块将系统调用插入正在运行的内核中。
@@ -13,10 +13,10 @@ tags:
 
 
 # 通过内核模块添加系统调用
-这个方法最简单但是坑也最多，因为内核开发组显然并不希望我们通过内核模块修改/覆盖系统调用[[2](#ref:2)]，并且做了诸多限制，为此我们只能用一些 trick。
+这个方法最简单但是坑也最多，因为内核开发组显然不希望我们通过内核模块修改/覆盖系统调用[[2](#ref:2)]，并且做了诸多限制，为此我们只能用一些 trick。
 
 ## 定义系统调用
-从 Linux 4.17 开始，x86 只接收 `struct pt_regs *` 一个参数[[9](#ref:9)]。因此系统调用的定义为如下形式：
+从 Linux 4.17 开始，x86 下系统调用服务例程只接收 `struct pt_regs *` 一个参数[[9](#ref:9)]。因此系统调用的定义为如下形式：
 
 ```c
 asmlinkage long sys_mycall(struct pt_regs *regs)
@@ -48,7 +48,7 @@ sudo cat /proc/kallsyms | grep sys_call_table
 
 但是每次主机重启该地址都会发生变化，所以不要把里面的地址硬编码到代码里，而是先手动执行上述命令获取系统调用表地址，再在 `insmod` 时通过 module param 传递进内核模块中。
 
-然而更好的方式是让模块在加载时通过 `kallsyms_lookup_name()` 函数自动去获取系统调用表地址。这个函数可以在运行时查询到内核中所有符号的地址，包括 non-exported symbols 如 `sys_call_table`。但是模块绕过内核的 export system 去访问 non-exported symbols 很容易被滥用，所以从内核 5.7 开始不再 export 这个函数了 [[4](#ref:4)]。不过这条路并没有被封死，我们还是可以通过 `kprobes` 来提取该地址。
+然而更好的方式是让模块在加载时通过 `kallsyms_lookup_name()` 函数自动去获取系统调用表地址。这个函数可以在运行时查询到内核中所有符号的地址，包括 non-exported symbols 如 `sys_call_table`。但是模块绕过内核的 export system 去访问 non-exported symbols 很容易被滥用，所以从内核 5.7 开始不再 export 这个函数了[[4](#ref:4)]。不过这条路并没有被封死，我们还是可以通过 kprobes 来提取该地址。
 
 - **放置 kprobes（推荐）**
 
@@ -92,7 +92,7 @@ module_exit(mymod_exit);
 那么如何确定系统调用表的大小呢？首先需要下载当前运行内核的源码。
 - 内核源码 arch/x86/entry/syscalls/syscall_64.tbl 中有定义的系统调用表。
 - 编译内核后，arch/x86/include/generated/uapi/asm/unistd_64.h 中的 `__NR_syscalls` 就是系统调用表大小，这个宏只是表示这个表的大小，并不是真正的系统调用个数。
-- 编译内核后，`arch/x86/include/generated/asm/syscalls_64.h` 中有完整的系统调用表（行数等于 `__NR_syscalls`，如果对应序号的系统调用不存在，那么就是初始值 `sys_ni_syscall`，表示没有实现的系统调用，调用该系统调用号直接返回错误码 `-ENOSYS`）。
+- 编译内核后，arch/x86/include/generated/asm/syscalls_64.h 中有完整的系统调用表（行数等于 `__NR_syscalls`，如果对应序号的系统调用不存在，那么就是初始值 `sys_ni_syscall`，表示没有实现的系统调用，调用该系统调用号直接返回错误码 `-ENOSYS`）。
 
 可以选择在系统调用表长度范围内且没有定义的系统调用号（虽然也可以拦截已定义的系统调用，但是有造成系统不稳定的风险）作为我们系统调用的插入位置，如 `335`。
 
@@ -101,7 +101,7 @@ module_exit(mymod_exit);
 module_param(MYCALL_NUM, int, S_IRUGO); // perm: 0444 readable
 ```
 
-如此一来，插入模块后测试程序就可以从 `/sys/module/mymod/parameters/MYCALL_NUM` 读取系统调用号，不需要硬编码或手动传入。
+如此一来，插入模块后测试程序就可以直接从 /sys/module/mymod/parameters/MYCALL_NUM 读取系统调用号，而不需要硬编码或手动传入。
 
 ## 插入系统调用
 修改系统调用表需要关闭内存的写保护：
@@ -124,7 +124,7 @@ cd /usr/src/linux-5.15.157
 mkdir mycall
 ```
 
-创建 mycall/mycall.c
+创建 mycall/mycall.c，包含系统调用的实现：
 ```C
 #include <linux/kernel.h>
 #incldue <linux/syscalls.h>
@@ -138,33 +138,31 @@ SYSCALL_DEFINE1(mycall, char __user *, buf)
 ```
 **注意：这里定义系统调用需要用 `SYSCALL_DEFINEx` 宏**[[11](#ref:11), [12](#ref:12)]。
 
-创建 mycall/Makefile
+创建 mycall/Makefile，内容如下：
 ```Makefile
 obj-y:=mycall.o
 ```
 
-3. 将 `mycall/` 添加到内核 Makefile（6.x 变了，需要改 Kbuild[[13](#ref:13)]）。
-
-搜索 `core-y`，添加 `mycall/` 到末尾
+3. 将 `mycall/` 添加到内核 Makefile 中 `core-y` 的末尾（6.x 变了，需要改 Kbuild [[13](#ref:13)]）。
 ```Makefile
 core-y                  += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ mycall/
 ```
 
-
-4. 将 sys_mycall 添加到系统调用表 `arch/x86/entry/syscalls/syscall_64.tbl`。
+4. 将 sys_mycall 添加到系统调用表 arch/x86/entry/syscalls/syscall_64.tbl。
 ```
 335     64      mycall                  sys_mycall
 ```
 
-5. 将 sys_mycall 添加到头文件 `include/linux/syscalls.h` 末尾但 `#endif` 之前。
+5. 将 sys_mycall 添加到头文件 include/linux/syscalls.h 末尾但 `#endif` 之前。
 ```C
+...
 asmlinkage long sys_mycall(char __user * buf);
 #endif
 ```
 
-6. 编译内核
+6. 编译内核。
 
-- 安装必要的包
+首先安装编译所需的包：
 ```bash
 sudo apt-get install gcc
 sudo apt-get install libncurses5-dev
@@ -176,14 +174,13 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-- 配置内核。由于我们需要使用 kprobes 和 kallsyms 特性，所以需要检查确认 `CONFIG_KPROBES=y`, `CONFIG_KALLSYMS=y`[[6](#ref:6)]。
-
+配置内核：由于我们需要使用 kprobes 和 kallsyms 特性，所以需要检查确认 `CONFIG_KPROBES=y`, `CONFIG_KALLSYMS=y`[[6](#ref:6)]。
 ```bash
 # 保存到 .config
 sudo make menuconfig
 ```
 
-- 编译内核。
+编译内核：
 ```bash
 sudo make -j$(nproc)
 ```

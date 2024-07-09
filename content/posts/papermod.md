@@ -2,7 +2,6 @@
 title: 'Step by step to build a blog with PaperMod like mine'
 tags:
 - hugo
-- papermod
 cover:
     image: /images/papermod.png
 ---
