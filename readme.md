@@ -1,4 +1,6 @@
 # Blog based on hugo-paperMod
+If you find any problem in my posts, please open an issue here.
+
 ## Development
 1. Install hugo
 2. Git clone this repo
