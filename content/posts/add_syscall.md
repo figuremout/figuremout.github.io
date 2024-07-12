@@ -3,6 +3,7 @@ title: Linux 内核添加自定义系统调用
 tags:
 - linux
 - kernel
+date: 2024-04-27
 ---
 
 网上的教程[[1](#ref:1)]大多使用老版本内核，许多内容已经不再适用了。本文依托于我的项目 [mycall](https://github.com/figuremout/mycall) 进行讲解，旨在把自己踩过的坑全部记录下来，**具体实现请参考源码**。实验在 ubuntu 20.04 amd64 虚拟机（内核版本 5.15.0-105-generic）中进行，如有错误或建议（如不适用于 6.x 内核），欢迎在我的 [Github Page repo](https://github.com/figuremout/figuremout.github.io) 提 issue。
@@ -124,7 +125,7 @@ cd /usr/src/linux-5.15.157
 mkdir mycall
 ```
 
-创建 mycall/mycall.c，包含系统调用的实现：
+创建 mycall/mycall.c，包含系统调用的实现。**注意**：这里定义系统调用需要用 `SYSCALL_DEFINEx` 宏[[11](#ref:11), [12](#ref:12)]。
 ```C
 #include <linux/kernel.h>
 #incldue <linux/syscalls.h>
@@ -136,14 +137,13 @@ SYSCALL_DEFINE1(mycall, char __user *, buf)
         return 0;
 }
 ```
-**注意：这里定义系统调用需要用 `SYSCALL_DEFINEx` 宏**[[11](#ref:11), [12](#ref:12)]。
 
 创建 mycall/Makefile，内容如下：
 ```Makefile
 obj-y:=mycall.o
 ```
 
-3. 将 `mycall/` 添加到内核 Makefile 中 `core-y` 的末尾（6.x 变了，需要改 Kbuild [[13](#ref:13)]）。
+3. 将 `mycall/` 添加到内核 Makefile 中 `core-y` 的末尾（6.x 内核变了，需要改 Kbuild [[13](#ref:13)]）。
 ```Makefile
 core-y                  += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ mycall/
 ```

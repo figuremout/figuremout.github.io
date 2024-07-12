@@ -2,11 +2,10 @@
 title: 'Step by step to build a blog with PaperMod like mine'
 tags:
 - hugo
+date: 2024-06-30
 cover:
     image: /images/papermod.png
 ---
-
-# Installation
 Follow [Installation doc](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation) to install Hugo and PaperMod.
 
 **Git Submodule Method is recommended**, which keeps your repo *independent and tidy* by seperating your configs and posts from the theme's source code.
@@ -25,7 +24,7 @@ Check [PaperMod doc](https://adityatelange.github.io/hugo-PaperMod/archives/) an
 
 # Configuration
 ## Home Info
-Show welcome message and social links in home page like the cover image of this blog, follow the [regular mode](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#regular-mode-default-mode) doc.
+Show welcome message and social links in home page like the cover image of this blog, follow the [home info mode](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#home-info-mode) doc.
 
 Add following to your `hugo.yaml`, you can modify as you like:
 ```yaml
