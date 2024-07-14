@@ -1,7 +1,7 @@
 baseURL: https://figuremout.github.io
 title: Z'Blog
 languageCode: en-us
-paginate: 5
+paginate: 10
 theme: [PaperMod]
 enableInlineShortcodes: true
 enableEmoji: true
