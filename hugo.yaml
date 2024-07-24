@@ -67,7 +67,7 @@ params:
       title: Visit me on bilibili
       url: "#"
     - name: rss
-      url: "#"
+      url: "https://figuremout.github.io/index.xml"
 
   busuanzi:
     enable: true
