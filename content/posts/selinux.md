@@ -3,6 +3,8 @@ title: "浅尝 SELinux"
 tags:
 - linux
 date: 2023-07-13
+cover:
+    image: /images/SELinux_arch.png
 ---
 用 Fedora 的时候，发现系统默认启用了 SELinux，还动不动弹警告窗口，于是稍微研究了一下。
 
@@ -14,8 +16,11 @@ SELinux 的实现依赖 LSM (Linux Security Modules)。LSM 在很多 Linux 内�
 
 我从 SELinux Notebook 中截取了一张非常好的 SELinux 整体架构图（书中还有对这张图的解读），基本包罗万象，先放在开头供大家参考。
 <div id="fig:SELinux_arch" style="text-align: center;">
-    <img src="/images/SELinux_arch.png"/>
-    <p style="color: #999; font-size: 0.9rem;">Figure 1: SELinux architecture.</p>
+    <img src="/images/SELinux_arch.png" style="display: block; margin: 0 auto;"/>
+    <p style="color: #999; font-size: 0.9rem;">
+        Figure 1. SELinux architecture.<br>
+        (Image source: <a style="color: inherit; font-size: inherit;" href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
+    </p>
 </div>
 
 # SELinux 模式
@@ -101,8 +106,11 @@ system_u:object_r:home_root_t:s0 /home/
 Context 由四个项构成：**SELinux user、SELinux role、SELinux type (进程的 type 又叫 domain)、level/range**。其中最重要的就是 type 项，因为超过 99% 的 SELinux rules 都不会使用整个 context，而是只关心两个 type 之间的关系，这就是 **TE (Type Enforcement)**。
 
 <div id="fig:SELinux_context_format" style="text-align: center;">
-    <img src="/images/SELinux_context_format.png"/>
-    <p style="color: #999; font-size: 0.9rem;">Figure 2: SELinux context format.</p>
+    <img src="/images/SELinux_context_format.png" style="display: block; margin: 0 auto;"/>
+    <p style="color: #999; font-size: 0.9rem;">
+        Figure 2. SELinux context format.<br>
+        (Image source: <a style="color: inherit; font-size: inherit;" href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
+    </p>
 </div>
 
 - SELinux user 项决定了可以切换为哪些 role。
@@ -841,7 +849,7 @@ Constraints: 142
 - actor 的 type 有 `ubacfile, ubacproc, ubackey` 等 attributes 中的一个。
 
 # 总结
-写了这么多，只是为了知其所依然。探究 context 从何而来很复杂，也没多大意义，实际上很少有人需要深入利用 SELinux，无非是在系统弹出警告时应付一下罢了，实践中知道这个 context 为什么有问题，怎么解决问题就好。
+写了这么多，只是为了知其所以然。探究 context 从何而来很复杂，也没多大意义，实际上很少有人需要深入利用 SELinux，无非是在系统弹出警告时应付一下罢了，实践中知道这个 context 为什么有问题，怎么解决问题就好。
 ```bash
 # 查看 SELinux 整体信息
 $ sestatus
@@ -902,7 +910,7 @@ $ setsebool <boolean> [on/off] # 修改 boolean
 sesearch -s <source type> -t <target type> -c <class>
 ```
 
-# References
+# Further Reading
 - [Gentoo SELinux tutorial](https://wiki.gentoo.org/wiki/SELinux/Tutorials)：本文的基本框架，最好、最简单易懂
 - [Red Hat SELinux User's and Administrator's Guide](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html-single/selinux_users_and_administrators_guide/index#sect-Security-Enhanced_Linux-Working_with_SELinux-Changing_SELinux_Modes)：比较全面，有示例
 - [SELinux Notebook](https://freecomputerbooks.com/books/The_SELinux_Notebook-4th_Edition.pdf)：最全面详细的大部头

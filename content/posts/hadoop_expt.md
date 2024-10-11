@@ -135,6 +135,8 @@ $ mount -t vboxsf shared-folder /mnt
 **接下来的操作全部在虚拟机中完成，且未说明的话默认每台虚拟机都要进行相同的操作**。
 
 ## 配置 Hadoop 依赖环境
+Hadoop 的安装配置详见 [Hadoop doc](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)。
+
 1. 宿主机下载 Hadoop 的 .tar.gz 压缩包到共享文件夹，进入虚拟机解压缩。
 ```bash
 $ tar -zxvf /mnt/hadoop-3.3.6.tar.gz -C ~
@@ -607,6 +609,3 @@ https://www.baidu.com   1447
 https://www.bilibili.com        1365
 https://www.google.com  1426
 ```
-
-# References
-- 关于 Hadoop 的安装配置见 [Hadoop doc](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)。

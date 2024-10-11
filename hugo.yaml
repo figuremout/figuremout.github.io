@@ -1,10 +1,11 @@
 baseURL: https://figuremout.github.io
 title: Z'Blog
 languageCode: en-us
-paginate: 10
 theme: [PaperMod]
 enableInlineShortcodes: true
 enableEmoji: true
+pagination:
+  pagerSize: 99
 
 menu:
   main:
@@ -22,9 +23,12 @@ menu:
       weight: 40
 
 params:
-  env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  defaultTheme: auto # to switch between dark or light according to browser theme
+  env: production # To enable google analytics, opengraph, twitter-cards and schema.
+  defaultTheme: auto # To switch between dark or light according to browser theme
 
+  cover:
+    linkFullImages: true # To enable hyperlinks to the full image size on post pages
+    hiddenInSingle: true # To hide on post pages
   ShowReadingTime: true
   ShowWordCount: true
   displayFullLangName: true
@@ -33,8 +37,8 @@ params:
   ShowToc: true
   editPost:
     URL: "https://github.com/figuremout/figuremout.github.io/tree/main/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+    Text: "Suggest Changes" # Edit text
+    appendFilePath: true # To append file path to Edit link
   math: true
   assets:
     favicon: "/favicon.ico"
@@ -81,7 +85,7 @@ outputs:
   home:
     - HTML
     - RSS
-    - JSON # necessary for search
+    - JSON # Necessary for search
 
 markup:
   highlight:

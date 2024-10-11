@@ -5,19 +5,17 @@ tags:
 - kernel
 date: 2024-04-27
 ---
-
-网上的教程[[1](#ref:1)]大多使用老版本内核，许多内容已经不再适用了。本文依托于我的项目 [mycall](https://github.com/figuremout/mycall) 进行讲解，旨在把自己踩过的坑全部记录下来，**具体实现请参考源码**。实验在 ubuntu 20.04 amd64 虚拟机（内核版本 5.15.0-105-generic）中进行，如有错误或建议（如不适用于 6.x 内核），欢迎在我的 [Github Page repo](https://github.com/figuremout/figuremout.github.io) 提 issue。
+网上的教程 [^1] 大多使用老版本内核，许多内容已经不再适用了。本文依托于我的项目 [mycall](https://github.com/figuremout/mycall) 进行讲解，旨在把自己踩过的坑全部记录下来，**具体实现请参考源码**。实验在 Ubuntu 20.04 amd64 虚拟机（内核版本 5.15.0-105-generic）中进行。
 
 本文将先后介绍给内核添加自定义系统调用的两种方式：
 - 通过内核模块将系统调用插入正在运行的内核中。
 - 将系统调用添加到内核源码中，再重新编译安装内核。
 
-
 # 通过内核模块添加系统调用
-这个方法最简单但是坑也最多，因为内核开发组显然不希望我们通过内核模块修改/覆盖系统调用[[2](#ref:2)]，并且做了诸多限制，为此我们只能用一些 trick。
+这个方法最简单但是坑也最多，因为内核开发组显然不希望我们通过内核模块修改/覆盖系统调用 [^2]，并且做了诸多限制，为此我们只能用一些 trick。
 
 ## 定义系统调用
-从 Linux 4.17 开始，x86 下系统调用服务例程只接收 `struct pt_regs *` 一个参数[[9](#ref:9)]。因此系统调用的定义为如下形式：
+从 Linux 4.17 开始，x86 下系统调用服务例程只接收 `struct pt_regs *` 一个参数 [^9]。因此系统调用的定义为如下形式：
 
 ```c
 asmlinkage long sys_mycall(struct pt_regs *regs)
@@ -26,10 +24,10 @@ asmlinkage long sys_mycall(struct pt_regs *regs)
 }
 ```
 
-根据 Linux x86 calling convention，Linux 系统调用通过寄存器传递参数：`rax` 存储系统调用号，`rdi` 存储第一个参数, etc. `pt_regs` 就是一个包含了寄存器值的结构体[[10](#ref:10)]，需要从中读取参数。
+根据 Linux x86 calling convention，Linux 系统调用通过寄存器传递参数：`rax` 存储系统调用号，`rdi` 存储第一个参数, etc. `pt_regs` 就是一个包含了寄存器值的结构体 [^10]，需要从中读取参数。
 
 ## 获取系统调用表地址
-要插入系统调用，首先需要能够找到系统调用表的地址 `sys_call_table`。可惜 2.6 版本以后内核就不再 export `sys_call_table` 了[[3](#ref:3)]，只能寻求其他办法：
+要插入系统调用，首先需要能够找到系统调用表的地址 `sys_call_table`。可惜 2.6 版本以后内核就不再 export `sys_call_table` 了 [^3]，只能寻求其他办法：
 
 - 从 System.map 读取
 
@@ -49,11 +47,11 @@ sudo cat /proc/kallsyms | grep sys_call_table
 
 但是每次主机重启该地址都会发生变化，所以不要把里面的地址硬编码到代码里，而是先手动执行上述命令获取系统调用表地址，再在 `insmod` 时通过 module param 传递进内核模块中。
 
-然而更好的方式是让模块在加载时通过 `kallsyms_lookup_name()` 函数自动去获取系统调用表地址。这个函数可以在运行时查询到内核中所有符号的地址，包括 non-exported symbols 如 `sys_call_table`。但是模块绕过内核的 export system 去访问 non-exported symbols 很容易被滥用，所以从内核 5.7 开始不再 export 这个函数了[[4](#ref:4)]。不过这条路并没有被封死，我们还是可以通过 kprobes 来提取该地址。
+然而更好的方式是让模块在加载时通过 `kallsyms_lookup_name()` 函数自动去获取系统调用表地址。这个函数可以在运行时查询到内核中所有符号的地址，包括 non-exported symbols 如 `sys_call_table`。但是模块绕过内核的 export system 去访问 non-exported symbols 很容易被滥用，所以从内核 5.7 开始不再 export 这个函数了 [^4]。不过这条路并没有被封死，我们还是可以通过 kprobes 来提取该地址。
 
 - **放置 kprobes（推荐）**
 
-利用 kprobes 可以追踪到 `kallsyms_lookup_name()` 函数的地址[[5](#ref:5), [6](#ref:6)]。其实也可以直接追踪 `sys_call_table`，不过根据 [[6](#ref:6)] 的描述，我这里还是先获取到 `kallsyms_lookup_name()` 函数，再利用该函数去查询系统调用表地址。以下是一个完整的 module 示例：
+利用 kprobes 可以追踪到 `kallsyms_lookup_name()` 函数的地址 [^5] [^6]。其实也可以直接追踪 `sys_call_table`，不过根据 [^6] 的描述，我这里还是先获取到 `kallsyms_lookup_name()` 函数，再利用该函数去查询系统调用表地址。以下是一个完整的 module 示例：
 ```C
 #include <linux/module.h>
 #include <linux/init.h>
@@ -88,7 +86,7 @@ module_exit(mymod_exit);
 ```
 
 ## 选择系统调用号
-**注意：自定义 syscall 的调用号必须在范围内**。因为一旦内核编译完成后，其系统调用表大小已确定下来，如果在其后追加，很容易造成内存溢出问题，所以只能拦截替换现有的 syscall [[7](#ref:7), [8](#ref:8)]。
+**注意：自定义 syscall 的调用号必须在范围内**。因为一旦内核编译完成后，其系统调用表大小已确定下来，如果在其后追加，很容易造成内存溢出问题，所以只能拦截替换现有的 syscall [^7] [^8]。
 
 那么如何确定系统调用表的大小呢？首先需要下载当前运行内核的源码。
 - 内核源码 arch/x86/entry/syscalls/syscall_64.tbl 中有定义的系统调用表。
@@ -125,7 +123,7 @@ cd /usr/src/linux-5.15.157
 mkdir mycall
 ```
 
-创建 mycall/mycall.c，包含系统调用的实现。**注意**：这里定义系统调用需要用 `SYSCALL_DEFINEx` 宏[[11](#ref:11), [12](#ref:12)]。
+创建 mycall/mycall.c，包含系统调用的实现。**注意**：这里定义系统调用需要用 `SYSCALL_DEFINEx` 宏 [^11] [^12]。
 ```C
 #include <linux/kernel.h>
 #incldue <linux/syscalls.h>
@@ -143,7 +141,7 @@ SYSCALL_DEFINE1(mycall, char __user *, buf)
 obj-y:=mycall.o
 ```
 
-3. 将 `mycall/` 添加到内核 Makefile 中 `core-y` 的末尾（6.x 内核变了，需要改 Kbuild [[13](#ref:13)]）。
+3. 将 `mycall/` 添加到内核 Makefile 中 `core-y` 的末尾（6.x 内核变了，需要改 Kbuild [^13]）。
 ```Makefile
 core-y                  += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ mycall/
 ```
@@ -174,7 +172,7 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-配置内核：由于我们需要使用 kprobes 和 kallsyms 特性，所以需要检查确认 `CONFIG_KPROBES=y`, `CONFIG_KALLSYMS=y`[[6](#ref:6)]。
+配置内核：由于我们需要使用 kprobes 和 kallsyms 特性，所以需要检查确认 `CONFIG_KPROBES=y`, `CONFIG_KALLSYMS=y` [^6]。
 ```bash
 # 保存到 .config
 sudo make menuconfig
@@ -194,29 +192,16 @@ sudo make modules_install install
 sudo make INSTALL_MOD_STRIP=1 modules_install install
 ```
 
-# References
-<span id="ref:1"/>[1] https://medium.com/anubhav-shrimal/adding-a-hello-world-system-call-to-linux-kernel-dad32875872
-
-<span id="ref:2"/>[2] https://lists.kernelnewbies.org/pipermail/kernelnewbies/2017-July/018091.html
-
-<span id="ref:3"/>[3] https://unix.stackexchange.com/questions/424119/why-is-sys-call-table-predictable
-
-<span id="ref:4"/>[4] https://lwn.net/Articles/813350/
-
-<span id="ref:5"/>[5] https://github.com/xcellerator/linux_kernel_hacking/issues/3
-
-<span id="ref:6"/>[6] https://stackoverflow.com/questions/70930059/proper-way-of-getting-the-address-of-non-exported-kernel-symbols-in-a-linux-kern
-
-<span id="ref:7"/>[7] https://www.jianshu.com/p/a4ae5ec55732
-
-<span id="ref:8"/>[8] https://stackoverflow.com/questions/2394985/linux-kernel-add-system-call-dynamically-through-module?rq=4
-
-<span id="ref:9"/>[9] https://stackoverflow.com/a/72677965/24741118
-
-<span id="ref:10"/>[10] https://www.torch-fan.site/2023/05/03/pt-regs%E5%B0%8F%E7%AC%94%E8%AE%B0/
-
-<span id="ref:11"/>[11] https://stackoverflow.com/questions/66800646/unable-to-add-a-custom-hello-system-call-on-x64-ubuntu-linux
-
-<span id="ref:12"/>[12] https://stackoverflow.com/questions/53735886/how-to-pass-parameters-to-linux-system-call
-
-<span id="ref:13"/>[13] https://stackoverflow.com/questions/76262123/adding-a-system-call-to-linux-kernel-6
+[^1]: https://medium.com/anubhav-shrimal/adding-a-hello-world-system-call-to-linux-kernel-dad32875872
+[^2]: https://lists.kernelnewbies.org/pipermail/kernelnewbies/2017-July/018091.html
+[^3]: https://unix.stackexchange.com/questions/424119/why-is-sys-call-table-predictable
+[^4]: https://lwn.net/Articles/813350/
+[^5]: https://github.com/xcellerator/linux_kernel_hacking/issues/3
+[^6]: https://stackoverflow.com/questions/70930059/proper-way-of-getting-the-address-of-non-exported-kernel-symbols-in-a-linux-kern
+[^7]: https://www.jianshu.com/p/a4ae5ec55732
+[^8]: https://stackoverflow.com/questions/2394985/linux-kernel-add-system-call-dynamically-through-module?rq=4
+[^9]: https://stackoverflow.com/a/72677965/24741118
+[^10]: https://www.torch-fan.site/2023/05/03/pt-regs%E5%B0%8F%E7%AC%94%E8%AE%B0/
+[^11]: https://stackoverflow.com/questions/66800646/unable-to-add-a-custom-hello-system-call-on-x64-ubuntu-linux
+[^12]: https://stackoverflow.com/questions/53735886/how-to-pass-parameters-to-linux-system-call
+[^13]: https://stackoverflow.com/questions/76262123/adding-a-system-call-to-linux-kernel-6

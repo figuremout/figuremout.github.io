@@ -5,12 +5,12 @@ body {
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 code {
   font-family: "DroidSansMNerdFontMono-Regular";
-  font-size: 13.5px !important;
+  font-size: 16px !important;
 }
 
 .post-title {
@@ -23,8 +23,8 @@ h2 {
   font-size: 1.6rem !important;
 }
 h3 {
-  font-size: 1.2rem !important;
+  font-size: 1.4rem !important;
 }
 h4, h5, h6 {
-  font-size: 1.1rem !important;
+  font-size: 1.2rem !important;
 }

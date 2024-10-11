@@ -1,10 +1,8 @@
 ---
-title: 'Step by step to build a blog with PaperMod like mine'
+title: 'Step by Step to Build a Blog with PaperMod'
 tags:
 - hugo
 date: 2024-06-30
-cover:
-    image: /images/papermod.png
 ---
 Follow [Installation doc](https://github.com/adityatelange/hugo-PaperMod/wiki/Installation) to install Hugo and PaperMod.
 
@@ -24,7 +22,7 @@ Check [PaperMod doc](https://adityatelange.github.io/hugo-PaperMod/archives/) an
 
 # Configuration
 ## Home Info
-Show welcome message and social links in home page like the cover image of this blog, follow the [home info mode](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#home-info-mode) doc.
+Follow the [home info mode](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-features/#home-info-mode) doc to show welcome message and social links on home page.
 
 Add following to your `hugo.yaml`, you can modify as you like:
 ```yaml
@@ -333,7 +331,7 @@ This [blog](https://www.elegantcrazy.com/posts/blog/build-blog-with-github-pages
 
 Copying and editing the theme code could make things less elegant than before, but it's a necessary compromise.
 
-# QA
+# Q & A
 ## How to specify image path?
 Check [this](https://stackoverflow.com/questions/71501256/how-to-insert-an-image-in-my-post-on-hugo), there are two ways to reference a image in markdown.
 
@@ -342,3 +340,7 @@ My preferred way is:
 - And reference an image by `![img](/images/test.png)`.
 
 BTW, add `#center` after image link to center it, see [doc](https://adityatelange.github.io/hugo-PaperMod/posts/papermod/papermod-faq/#centering-image-in-markdown).
+
+## How to generate posts with desired default frontmatter?
+1. Create `archetypes/default.md` with the frontmatter template only .
+2. Exec `hugo new content content/posts/new.md`.
