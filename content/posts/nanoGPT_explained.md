@@ -239,7 +239,7 @@ class GPT(nn.Module):
 - `lm_head` 是一个模型头，对应于 HF Transformers 的 [Model heads](https://huggingface.co/docs/transformers/main/en/create_a_model#model-heads)。对于语言模型，生成文本任务需要的是分类头，因此 `lm_head` 是一个线性层，负责将 transformer 块输出的 `n_embd` 维度向量映射到 `vocab_size` 维度的 logits。训练时这个 logits 可以直接用于计算误差，但推理时还需要经过 Softmax 转换为采样概率。
 - Token embedding 和 `lm_head` 共享权重（Weight Tying）
 
-模型的训练和推理都是通过 `forward` 函数在模型中进行前向传播。可以印证的是，Transformer 是一种 Seq2Seq 模型，每次 forward 同时处理序列中所有 token，同时预测每个 token 的 logits 分数，这个 logits 对应的是下一个 token 的概率。因此输入一段序列，可以同时预测序列中每个 token 的下一个 token，计算所有交叉熵误差的平均，这就解释了为什么训练时标签数据 y 要传入一串连续的 token id 而不是一个，。
+模型的训练和推理都是通过 `forward` 函数在模型中进行前向传播。可以印证的是，Transformer 是一种 Seq2Seq 模型，每次 forward 同时处理序列中所有 token，同时预测每个 token 的 logits 分数，这个 logits 对应的是下一个 token 的概率。因此输入一段序列，可以同时预测序列中每个 token 的下一个 token，计算所有交叉熵误差的平均，这就解释了为什么训练时标签数据 y 要传入一串连续的 token id 而不是一个。
 
 ## Transformer
 对模型整体有了概念，接下来研究核心模块——Transformer 块。GPT-2 的 transformer 块和 GPT-1 有所不同。对比 [Figure 1](#fig:GPT_2_arch) 和 [Figure 2](#fig:GPT_1_transformer) 发现，GPT-1 的 transformer 块遵循 Self-attention 原论文 ([Vaswani et al., 2017](https://arxiv.org/abs/1706.03762)) 中的 decoder-only transformer 架构，采用后置层正则化（Post-LN），而 GPT-2 采用的是**前置层正则化**（Pre-LN）。大多数模型都采用前置来增强训练稳定性，尽管这会影响模型性能 ([Zhao et al., 2023](https://arxiv.org/abs/2303.18223))。
