@@ -242,7 +242,7 @@ class GPT(nn.Module):
 模型的训练和推理都是通过 `forward` 函数在模型中进行前向传播。可以印证的是，Transformer 是一种 Seq2Seq 模型，每次 forward 同时处理序列中所有 token，同时预测每个 token 的 logits 分数，这个 logits 对应的是下一个 token 的概率。因此输入一段序列，可以同时预测序列中每个 token 的下一个 token，计算所有交叉熵误差的平均，这就解释了为什么训练时标签数据 y 要传入一串连续的 token id 而不是一个。
 
 ## Transformer
-对模型整体有了概念，接下来研究核心模块——Transformer 块。GPT-2 的 transformer 块和 GPT-1 有所不同。对比 [Figure 1](#fig:GPT_2_arch) 和 [Figure 2](#fig:GPT_1_transformer) 发现，GPT-1 的 transformer 块遵循 Self-attention 原论文 ([Vaswani et al., 2017](https://arxiv.org/abs/1706.03762)) 中的 decoder-only transformer 架构，采用后置层正则化（Post-LN），而 GPT-2 采用的是**前置层正则化**（Pre-LN）。大多数模型都采用前置来增强训练稳定性，尽管这会影响模型性能 ([Zhao et al., 2023](https://arxiv.org/abs/2303.18223))。
+对模型整体有了概念，接下来研究核心模块——Transformer 块。GPT-2 的 transformer 块和 GPT-1 有所不同。对比 [Figure 1](#fig:GPT_2_arch) 和 [Figure 2](#fig:GPT_1_transformer) 发现，GPT-1 的 transformer 块遵循 Self-attention 原论文 ([Vaswani et al., 2017](https://arxiv.org/abs/1706.03762)) 中的 decoder-only transformer 架构，采用后置层正则化（Post-LN），而 GPT-2 采用的是**前置层正则化**（Pre-LN）。大多数模型都采用前置来增强训练稳定性，尽管这会影响模型性能 ([Zhao et al., 2023](https://arxiv.org/abs/2303.18223)) 。 [^6]
 
 <div id="fig:GPT_1_transformer" style="text-align: center;">
     <img src="/images/GPT_1_transformer.png" style="display: block; margin: 0 auto;"/>
@@ -770,3 +770,4 @@ class CausalSelfAttention(nn.Module):
 [^3]: https://huggingface.co/docs/transformers/generation_strategies
 [^4]: https://huggingface.co/docs/transformers/generation_strategies#watermarking
 [^5]: https://huggingface.co/docs/transformers/kv_cache#under-the-hood-how-cache-object-works-in-attention-mechanism
+[^6]: https://spaces.ac.cn/archives/9009
