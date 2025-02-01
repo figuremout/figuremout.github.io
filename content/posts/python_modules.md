@@ -24,7 +24,7 @@ if __name__ == "__main__":
 为了加快 module 的**加载速度**，Python 将每个 module 的编译版本保存为 \_\_pycache\_\_ 目录下的 module.version.pyc 文件。从 .pyc 文件读取程序的运行速度并不比从 .py 文件读取程序的速度快； .pyc 文件唯一更快的是它们的加载速度。
 
 # Packages
-**注意**：所有 packages 都是 modules，但反之不然。换句话说，**Package 是一种特殊的 module**。特别地，任何包含 `__path__` 的 module 被视为一个 pacakge。为便于理解，可以把 module 视为 .py 文件，而 packages 视为包含 subpackages 和 submodules 的目录 (**but don’t take this analogy too literally**)。
+**注意**：所有 packages 都是 modules，但反之不然。换句话说，**Package 是一种特殊的 module**。特别地，任何包含 `__path__` 的 module 被视为一个 pacakge。为便于理解，可以把 module 视为 .py 文件，而 packages 视为包含 subpackages 和 submodules 的目录 (**"but don’t take this analogy too literally"**)。
 
 Python 有两种类型的 package：regular package 和 namespace package。一个 regular package 目录下必须包含 \_\_init\_\_.py 文件，导入包时该包及其父包的 \_\_init\_\_.py 会被隐式执行。\_\_init\_\_.py 可以只是一个空文件，也可以执行包的初始化代码或设置 `__all__` 变量：
 - 如果 \_\_init\_\_.py 中定义了一个名为 `__all__` 的列表，则当遇到 `from package import *` 时，它将被视为应导入的 modules 列表。

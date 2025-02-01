@@ -5,26 +5,42 @@ body {
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
-  font-size: 18px;
+  font-size: 13.5px;
 }
 
 code {
   font-family: "DroidSansMNerdFontMono-Regular";
-  font-size: 16px !important;
+  font-size: 12px !important;
 }
 
 .post-title {
-  font-size: 2.2rem !important;
-}
-h1:not(.post-title) {
-  font-size: 1.8rem !important;
-}
-h2 {
   font-size: 1.6rem !important;
 }
-h3 {
+h1:not(.post-title) {
   font-size: 1.4rem !important;
 }
-h4, h5, h6 {
+h2 {
   font-size: 1.2rem !important;
+}
+h3 {
+  font-size: 1.1rem !important;
+}
+h4, h5, h6 {
+  font-size: 1.0rem !important;
+}
+
+div:has(> img) {
+  text-align: center !important;
+}
+div img {
+  display: block !important;
+  margin: 0 auto !important;
+}
+div img + p {
+  color: #999 !important;
+  font-size: 0.7rem !important;
+}
+div img + p a{
+  color: inherit !important;
+  font-size: inherit !important;
 }

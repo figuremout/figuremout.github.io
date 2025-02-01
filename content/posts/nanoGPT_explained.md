@@ -29,12 +29,12 @@ model = BertModel(config)
 
 类似的，nanoGPT 通过 [GPTConfig](https://github.com/karpathy/nanoGPT/blob/9755682b981a45507f6eb9b11eadef8cb83cebd5/model.py#L108-L116) 类定义模型的属性及其默认值。大模型相关 paper 又有自己惯用的一套表示符号，为方便联系起来理解，对比如下：
 
-| | BERT<br>([Devlin et al., 2018](https://arxiv.org/abs/1810.04805)) | GPT-2<br>([Radford et al., 2019](https://openai.com/index/better-language-models/))| GPT-3<br>([Brown et al., 2020](https://arxiv.org/abs/2005.14165)) | nanoGPT | GPT-2 117M |
+| | [BERT](https://arxiv.org/abs/1810.04805) | [GPT-2](https://openai.com/index/better-language-models/) | [GPT-3](https://arxiv.org/abs/2005.14165) | nanoGPT | GPT-2 117M |
 | - | - | - | - | - | - | - |
 | 上下文长度 | - | - | $n_{ctx}$ | `GPTConfig.block_size` | 1024 |
-| 隐藏层数量 | L | - | $n_{layers}$| `GPTConfig.n_layer` | 12 |
-| 注意力头数量 | A | - | $n_{heads}$ | `GPTConfig.n_head` | 12 |
-| 词嵌入向量维度 | H | $d_{model}$ | $d_{model}$ | `GPTConfig.n_embd` | 768 |
+| 隐藏层数量 | $L$ | - | $n_{layers}$| `GPTConfig.n_layer` | 12 |
+| 注意力头数量 | $A$ | - | $n_{heads}$ | `GPTConfig.n_head` | 12 |
+| 词嵌入向量维度 | $H$ | $d_{model}$ | $d_{model}$ | `GPTConfig.n_embd` | 768 |
 | 词表大小 | - | - | - | `GPTConfig.vocab_size` | 50257 |
 
 - 上下文长度：指的是模型可接受输入的 token seq 长度，这是固定的，若更短则应填充，若更长则应截断
@@ -142,11 +142,11 @@ def get_batch(split):
 # Model
 GPT-2 的模型架构还是比较简单清晰的。[Figure 1](#fig:GPT_2_arch) 截图自 [LLM Visualization](https://bbycroft.net/llm)，这是一个非常好的 GPT 模型架构交互式可视化网站。该图所示和代码实现完全一致，可以比对着看。
 
-<div id="fig:GPT_2_arch" style="text-align: center;">
-    <img src="/images/gpt2_arch.png" style="display: block; margin: 0 auto;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:GPT_2_arch">
+    <img src="/images/gpt2_arch.png" style="width: 80%;"/>
+    <p>
         Figure 1. GPT-2 architecture.<br>
-        (Image source: <a style="color: inherit; font-size: inherit;" href="https://bbycroft.net/llm">LLM Visualization</a>)
+        (Image source: <a href="https://bbycroft.net/llm">LLM Visualization</a>)
     </p>
 </div>
 
@@ -244,11 +244,11 @@ class GPT(nn.Module):
 ## Transformer
 对模型整体有了概念，接下来研究核心模块——Transformer 块。GPT-2 的 transformer 块和 GPT-1 有所不同。对比 [Figure 1](#fig:GPT_2_arch) 和 [Figure 2](#fig:GPT_1_transformer) 发现，GPT-1 的 transformer 块遵循 Self-attention 原论文 ([Vaswani et al., 2017](https://arxiv.org/abs/1706.03762)) 中的 decoder-only transformer 架构，采用后置层正则化（Post-LN），而 GPT-2 采用的是**前置层正则化**（Pre-LN）。大多数模型都采用前置来增强训练稳定性，尽管这会影响模型性能 ([Zhao et al., 2023](https://arxiv.org/abs/2303.18223)) 。 [^6]
 
-<div id="fig:GPT_1_transformer" style="text-align: center;">
-    <img src="/images/GPT_1_transformer.png" style="display: block; margin: 0 auto;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:GPT_1_transformer">
+    <img src="/images/GPT_1_transformer.png" style="width: 30%;"/>
+    <p>
         Figure 2. GPT-1 transformer architecture.<br>
-        (Image source: <a style="color: inherit; font-size: inherit;" href="https://openai.com/index/language-unsupervised/">Radford et al., 2018</a>)
+        (Image source: <a href="https://openai.com/index/language-unsupervised/">Radford et al., 2018</a>)
     </p>
 </div>
 
@@ -271,22 +271,22 @@ class Block(nn.Module):
         return x
 ```
 
-## MHA
+## MHA (Multi-Head Attention)
 Transformer 块中最重要的是 `CausalSelfAttention` 层，实现了 **MHA**。李宏毅的 ML 课程是一个比较好的入门课程，尤其是对自注意力机制的教学非常通俗易懂，令我印象深刻。
 
-<div id="fig:MHA-hylee" style="text-align: center;">
-    <img src="/images/MHA-hylee.png" style="display: block; margin: 0 auto; width: 80%;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:MHA-hylee">
+    <img src="/images/MHA-hylee.png" style="width: 60%;"/>
+    <p>
         Figure 3. Multi-head Self-attention.<br>
-        (Image source: <a style="color: inherit; font-size: inherit;" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">李宏毅 ML 课程 PPT</a>)
+        (Image source: <a href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf">李宏毅 ML 课程 PPT</a>)
     </p>
 </div>
 
 但是上图并没有详细描述计算过程，因此我根据 nanoGPT 源码绘制了 [Figure 4](#fig:MHA)。
 
-<div id="fig:MHA" style="text-align: center;">
-    <img src="/images/MHA.drawio.svg" style="display: block; margin: 0 auto; width: 60%;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:MHA">
+    <img src="/images/MHA.drawio.svg" style="width: 60%;"/>
+    <p>
         Figure 4. Multi-head Self-attention. (2 heads)<br>
     </p>
 </div>
@@ -295,9 +295,9 @@ Transformer 块中最重要的是 `CausalSelfAttention` 层，实现了 **MHA**�
 2. 每个 token 的 Q, K, V 向量分别等分为 `n_head` 份，按 `1 ~ n_head` 编号，每份 `n_embd/n_head` 大小。
 3. 对于 1 号注意力头，用每个 token 的 1 号 Q 和所有 token 的 1 号 K 相乘，得到 1 号注意力分数矩阵 `(T, T)`。其他注意力头计算同理，也就是得到 `n_head` 个注意力分数矩阵 `(T, T)`。
 4. 注意力矩阵进行单向掩码和 Softmax，实现单向注意力，变为下三角矩阵。
-<div id="fig:MHA-hylee" style="text-align: center;">
-    <img src="/images/causal_mask.drawio.svg" style="display: block; margin: 0 auto; width: 80%;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:MHA-hylee">
+    <img src="/images/causal_mask.drawio.svg" style="width: 80%;"/>
+    <p>
         Figure 5. Causal mask.<br>
     </p>
 </div>
@@ -365,6 +365,8 @@ class CausalSelfAttention(nn.Module):
         y = self.resid_dropout(self.c_proj(y))
         return y
 ```
+
+PyTorch 的 `torch.nn.functional.scaled_dot_product_attention` (Scaled Dot Product Attention, SDPA) 提供多种实现（FlashAttention-2, Memory-Efficient Attention, PyTorch implementation），默认情况下会根据输入自动选择最佳实现 [^7]。不过 SDPA 了解一下就可以了，在使用 Transformers/PyTorch 时偶尔会见到，为了理解注意力分数的计算过程我们还是重点关注手动实现版本。
 
 想要明白代码中 Q, K, V 之间的矩阵乘法，先要搞清楚**高维张量乘法**的计算。`@` 操作符其实就是 `torch.matmul`[^1]，它会将最后两维视为矩阵，多余的维度视为批处理维度，若两个高维张量的批处理维度不一致，可以进行广播 [^2]。批处理维度按照逐元素乘积，矩阵进行矩阵乘法，见下面这个 gist 示例。
 
@@ -771,3 +773,4 @@ class CausalSelfAttention(nn.Module):
 [^4]: https://huggingface.co/docs/transformers/generation_strategies#watermarking
 [^5]: https://huggingface.co/docs/transformers/kv_cache#under-the-hood-how-cache-object-works-in-attention-mechanism
 [^6]: https://spaces.ac.cn/archives/9009
+[^7]: https://huggingface.co/docs/transformers/main/en/model_doc/gpt2#using-scaled-dot-product-attention-sdpa

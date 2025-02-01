@@ -15,11 +15,11 @@ SELinux 的实现依赖 LSM (Linux Security Modules)。LSM 在很多 Linux 内�
 在 SELinux 下，每个进程和资源都被赋予了 **SELinux context (i.e. SELinux label)**，利用这些 context 可以编写一系列 rules 来定义进程和进程之间、进程和资源之间允许哪些交互（**白名单方式**，除非你在 rule 中显式地允许了，否则 SELinux 默认不允许任何交互，这就是为什么叫做强制式），这些 rules 组合在一起就是 **SELinux policy**。需要注意的是，DAC 和 MAC 是合作而不是互斥关系，要在通过 DAC 的检查后才能检查 SELinux policy 的 rules ，也就是说如果你的访问连 DAC 都过不去那就不用劳烦 SELinux 了。
 
 我从 SELinux Notebook 中截取了一张非常好的 SELinux 整体架构图（书中还有对这张图的解读），基本包罗万象，先放在开头供大家参考。
-<div id="fig:SELinux_arch" style="text-align: center;">
-    <img src="/images/SELinux_arch.png" style="display: block; margin: 0 auto;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:SELinux_arch">
+    <img src="/images/SELinux_arch.png"/>
+    <p>
         Figure 1. SELinux architecture.<br>
-        (Image source: <a style="color: inherit; font-size: inherit;" href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
+        (Image source: <a href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
     </p>
 </div>
 
@@ -105,11 +105,11 @@ system_u:object_r:home_root_t:s0 /home/
 
 Context 由四个项构成：**SELinux user、SELinux role、SELinux type (进程的 type 又叫 domain)、level/range**。其中最重要的就是 type 项，因为超过 99% 的 SELinux rules 都不会使用整个 context，而是只关心两个 type 之间的关系，这就是 **TE (Type Enforcement)**。
 
-<div id="fig:SELinux_context_format" style="text-align: center;">
-    <img src="/images/SELinux_context_format.png" style="display: block; margin: 0 auto;"/>
-    <p style="color: #999; font-size: 0.9rem;">
+<div id="fig:SELinux_context_format">
+    <img src="/images/SELinux_context_format.png"/>
+    <p >
         Figure 2. SELinux context format.<br>
-        (Image source: <a style="color: inherit; font-size: inherit;" href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
+        (Image source: <a href="https://github.com/SELinuxProject/selinux-notebook">selinux-notebook</a>)
     </p>
 </div>
 
