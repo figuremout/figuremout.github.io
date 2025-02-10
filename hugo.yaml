@@ -4,8 +4,7 @@ languageCode: en-us
 theme: [PaperMod]
 enableInlineShortcodes: true
 enableEmoji: true
-pagination:
-  pagerSize: 99
+paginate: 99
 
 menu:
   main:
@@ -47,9 +46,13 @@ params:
   homeInfoParams:
     Title: "👋 Welcome to Z'Blog"
     Content: >
-      - Hi, A **Software Engineer** here! 🤗
+      - 这是一位 **软件工程师** 的博客！ 🤗
 
-      - Passionate about exploring ***Linux 🐧, AI 🤖 and Software Development 💻***.
+      - 热衷于探索 ***Linux 🐧, AI 🤖 和软件开发技术 💻***.
+
+#- Hi, A **Software Engineer** here! 🤗
+
+#- Passionate about exploring ***Linux 🐧, AI 🤖 and Software Development 💻***.
 
   socialIcons:
     - name: cv
@@ -58,18 +61,18 @@ params:
     - name: github
       title: Visit me on GitHub
       url: "https://github.com/figuremout"
-    - name: googlescholar
-      title: Visit me on Google Scholar
-      url: "#"
+#- name: googlescholar
+#title: Visit me on Google Scholar
+#url: "#"
     - name: email
       title: Email me
       url: "mailto:googlz555555@gmail.com"
     - name: linkedin
       title: Visit me on LinkedIn
       url: "#"
-    - name: bilibili
-      title: Visit me on bilibili
-      url: "#"
+#- name: bilibili
+#title: Visit me on bilibili
+#url: "#"
     - name: rss
       url: "https://figuremout.github.io/index.xml"
 

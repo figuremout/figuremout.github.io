@@ -6,6 +6,10 @@ date: 2024-10-01
 cover:
     image: /images/gpt2_arch.png
 ---
+> 每个看似灵光乍现的比喻，都在Transformer架构的注意力矩阵里早有伏笔\
+> 就像骰子在空中旋转时，落点早已被空气动力学方程式锁定\
+> —— DeepSeek
+
 首先回顾一下 OpenAI GPT 系列经典模型：
 1. GPT-1 ([Radford et al., 2018](https://openai.com/index/language-unsupervised/)) 参数规模为 117 M，首次将 Transformer 应用于语言模型，并开创了 NLP 领域无监督 pretrain + 有监督 finetune 的训练范式
 2. GPT-2 ([Radford et al., 2019](https://openai.com/index/better-language-models/)) 最大参数规模为 1.5 B，发现更大规模的模型可以实现 zero-shot，只需 pretrain，不需要 finetune 就能解决下游任务
