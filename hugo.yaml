@@ -46,18 +46,28 @@ params:
   homeInfoParams:
     Title: "👋 Welcome to Z'Blog"
     Content: >
-      - 这是一位 **软件工程师** 的博客！ 🤗
+      - <div style="display: flex; align-items: center;  justify-content:">
+          <img src="images/portrait.gif" style="width: 15%; height: auto; margin: 0 !important;">
+          <span>
+            这是一位 <strong>软件工程师</strong> 的博客！<br>
+            热衷于探索 <strong><i>Linux, AI 和软件开发技术</i></strong>. 😉
+          </span>
+        </div>
 
-      - 热衷于探索 ***Linux 🐧, AI 🤖 和软件开发技术 💻***.
+#- 这是一位 **软件工程师** 的博客！ 🤗
+
+#- 热衷于探索 ***Linux, AI 和软件开发技术***.
+
+#- 热衷于探索 ***Linux 🐧, AI 🤖 和软件开发技术 💻***.
 
 #- Hi, A **Software Engineer** here! 🤗
 
 #- Passionate about exploring ***Linux 🐧, AI 🤖 and Software Development 💻***.
 
   socialIcons:
-    - name: cv
-      title: "Check my resume"
-      url: "#"
+#- name: cv
+#  title: "Check my resume"
+#  url: "#"
     - name: github
       title: Visit me on GitHub
       url: "https://github.com/figuremout"
@@ -67,9 +77,9 @@ params:
     - name: email
       title: Email me
       url: "mailto:googlz555555@gmail.com"
-    - name: linkedin
-      title: Visit me on LinkedIn
-      url: "#"
+#- name: linkedin
+#title: Visit me on LinkedIn
+#url: "#"
 #- name: bilibili
 #title: Visit me on bilibili
 #url: "#"
